@@ -15,12 +15,18 @@ public class EnemyController : MonoBehaviour {
     public float chaseDistance;
     public MouseController mouseControls;
     public GameOverHandler gameOver;
+    //public AudioSource audioSource;
+    //public AudioClip yell;
+    //public AudioClip hitSound;
+    public AudioSource yell;
+    public AudioSource hitSound;
     private float lightChaseDistance;
     private float oldLightChaseDistance;
     private float waypointTimer;
     private int randomIndex;
-    private bool lightdetected;
-    private bool sightdetected;
+    public bool lightdetected;
+    public bool sightdetected;
+    public bool playedYell;
 
     private int playerMask;
     private RaycastHit shortlookHit;
@@ -39,6 +45,7 @@ public class EnemyController : MonoBehaviour {
         lightChaseDistance = 7;
         lightdetected = false;
         sightdetected = false;
+        playedYell = false;
         //print(randomIndex);
         //print(waypointTimer);
     }
@@ -50,17 +57,36 @@ public class EnemyController : MonoBehaviour {
         distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         //print(distanceToPlayer);
         HandleTimer();
-
-        if (sightdetected)
+        if (!gameOver.gameWon && !gameOver.gameIsOver)
         {
-            SightChase();
-        }
-        else if(detectionSystem.lightdetected){
-            lightdetected = true;
-            LightChase();
+            if (sightdetected)
+            {
+                if(!playedYell){
+                    //audioSource.PlayOneShot(yell);
+                    yell.Play();
+                    playedYell = true;
+                }
+                SightChase();
+            }
+            else if (detectionSystem.lightdetected)
+            {
+                if (!playedYell)
+                {
+                    //audioSource.PlayOneShot(yell);
+                    yell.Play();
+                    playedYell = true;
+                }
+                lightdetected = true;
+                LightChase();
+            }
+            else
+            {
+                Traverse();
+            }
         }
         else{
-            Traverse();
+            anim.SetFloat("speed", 0);
+            nav.speed = 0;
         }
     }
 
@@ -83,19 +109,20 @@ public class EnemyController : MonoBehaviour {
             {
                 if (farlookHit.collider.tag == "Player")
                 {
+                    if (!playedYell)
+                    {
+                        //audioSource.PlayOneShot(yell);
+                        yell.Play();
+                        playedYell = true;
+                    }
                     sightdetected = true;
                     //Chase();
                 }
             }
             if(waypointTimer > 0 && !lightdetected && !sightdetected)
             {
-                //if (waypointTimer > 0)
-                //{
-                    //var navpoint = waypoints[randomIndex];
-                //print(waypoints[randomIndex].transform.position);
-                //nav.SetDestination(waypoints[randomIndex].transform.position);
                 nav.destination = waypoints[randomIndex].transform.position;
-                //print(Vector3.Distance(waypoints[randomIndex].transform.position, transform.position));
+
                 if (Vector3.Distance(waypoints[randomIndex].transform.position, transform.position) <= 1.5)
                 {
                     nav.speed = 0;
@@ -108,9 +135,21 @@ public class EnemyController : MonoBehaviour {
                 }
             }
             if(lightdetected){
+                if (!playedYell)
+                {
+                    //audioSource.PlayOneShot(yell);
+                    yell.Play();
+                    playedYell = true;
+                }
                 LightChase();
             }
             else if(sightdetected){
+                if (!playedYell)
+                {
+                    //audioSource.PlayOneShot(yell);
+                    yell.Play();
+                    playedYell = true;
+                }
                 SightChase();
             }
             if(waypointTimer <= 0)
@@ -125,6 +164,12 @@ public class EnemyController : MonoBehaviour {
             {
                 if (shortlookHit.collider.tag == "Player" && !playerControls.hidden)
                 {
+                    if (!playedYell)
+                    {
+                        //audioSource.PlayOneShot(yell);
+                        yell.Play();
+                        playedYell = true;
+                    }
                     sightdetected = true;
                     //Chase();
                 }
@@ -168,19 +213,24 @@ public class EnemyController : MonoBehaviour {
             sightdetected = true;
             nav.destination = player.transform.position;
             anim.SetFloat("speed", nav.speed);
-            if (distanceToPlayer <= 1.7)
+            if (distanceToPlayer <= 1.7 && (!gameOver.gameWon && !gameOver.gameIsOver))
             {
                 nav.speed = 0;
                 anim.SetFloat("speed", nav.speed);
                 playerControls.RIP();
                 mouseControls.RIP();
                 Attack();
+                if(!gameOver.gameWon && !gameOver.gameIsOver){
+                    //audioSource.PlayOneShot(hitSound);
+                    hitSound.Play();
+                }
                 gameOver.GameOver();
             }
         }
         else
         {
             sightdetected = false;
+            //playedYell = false;
             nav.destination = waypoints[randomIndex].transform.position;
             nav.speed = 2;
         }
@@ -197,19 +247,25 @@ public class EnemyController : MonoBehaviour {
             if (distanceToPlayer < chaseDistance){
                 lightChaseDistance = 10;
             }
-            if (distanceToPlayer <= 1.7)
+            if (distanceToPlayer <= 1.7 && (!gameOver.gameWon && !gameOver.gameIsOver))
             {
                 nav.speed = 0;
                 anim.SetFloat("speed", nav.speed);
                 playerControls.RIP();
                 mouseControls.RIP();
                 Attack();
+                if (!gameOver.gameWon && !gameOver.gameIsOver)
+                {
+                    //audioSource.PlayOneShot(hitSound);
+                    hitSound.Play();
+                }
                 gameOver.GameOver();
             }
         }
         else
         {
             lightdetected = false;
+            //playedYell = false;
             nav.destination = waypoints[randomIndex].transform.position;
             lightChaseDistance = 13;
             nav.speed = 2;

@@ -13,9 +13,11 @@ public class BushHandler : MonoBehaviour {
     public MeshRenderer playerMesh;
     public GameObject flashlight;
     public Text hiddenText;
+    public AudioSource breathing;
+    //public EnemyController enemyController;
     //private Transform oldPlayerCameraPosition;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         playerControls.hidden = false;
         //oldPlayerCameraPosition = playerCamera.transform;
 	}
@@ -35,6 +37,8 @@ public class BushHandler : MonoBehaviour {
                 hiddenText.gameObject.SetActive(true);
                 playerMesh.enabled = false;
                 flashlight.SetActive(false);
+                //enemyController.playedYell = false;
+                breathing.Play();
             }
         }
     }

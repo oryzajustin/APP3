@@ -7,7 +7,7 @@ public class PortalHandler : MonoBehaviour {
     private int randIndex;
 	// Use this for initialization
 	void Start () {
-        randIndex = Random.Range(0, 3);
+        randIndex = Random.Range(0, 4);
         portals[randIndex].SetActive(true);
 	}
 	

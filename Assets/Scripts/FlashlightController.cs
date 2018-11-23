@@ -10,6 +10,7 @@ public class FlashlightController : MonoBehaviour {
     public float raydistance;
     public DetectionSystem detectionSystem;
     public GameOverHandler gameOver;
+    public AudioSource flashlightSound;
     
     //public GameObject skeleton;
     int shootableMask;
@@ -24,11 +25,13 @@ public class FlashlightController : MonoBehaviour {
         {
             if (!lighton)
             {
+                flashlightSound.Play();
                 flashlight.enabled = true;
                 lighton = true;
             }
             else
             {
+                flashlightSound.Play();
                 flashlight.enabled = false;
                 lighton = false;
             }
