@@ -12,7 +12,7 @@
 - Flashing light at a monster/standing close in front of it triggers a chase
 - Player scores can be seen at the Main Menu
 - There is no escape from the game once it is started, you must finish or die trying
-- End game screens
+- End game screens/Scoreboard
 - Skeletons have waypoints that they navigate to, switched by use of a waypoint timer
 - Nav mesh is used to help the AI traverse the terrain
 - The player cannot exit the map, by indication of tree lines
