@@ -17,3 +17,8 @@
 - Nav mesh is used to help the AI traverse the terrain
 - The player cannot exit the map, by indication of tree lines
 - Fog is added to decrease player view distance (alleviated by use of the flashlight)
+
+## Known Issues
+- Player can get stuck on invisible walls, due to overfitted collision boxes
+- Monster animation controller sometimes shows weird behavior
+- Monster yell audio clip sometimes does not work
